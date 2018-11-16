@@ -164,7 +164,7 @@ def drawScore(score):
 
 def drawPressKeyMsg():
     pressKeyFont = pygame.font.SysFont('freesansbold.tff', 20)
-    pressKeySurf = pressKeyFont.render('Press a key to play.', True, DARKGRAY)
+    pressKeySurf = pressKeyFont.render('Press any key to play. ESC to quit', True, DARKGRAY)
     pressKeyRect = pressKeySurf.get_rect()
     pressKeyRect.topleft = (10, 30)
     DISPLAYSURF.blit(pressKeySurf, pressKeyRect)
