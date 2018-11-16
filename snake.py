@@ -1,19 +1,21 @@
 import random, pygame, sys
 from pygame.locals import *
 
-FPS = 20
+FPS = 15
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 640
 
 CELLSIZE = 20
 
-CELLWIDTH = WINDOWWIDTH / 20
-CELLHEIGHT = WINDOWHEIGHT / 20
+CELLWIDTH = int(WINDOWWIDTH / 20)
+CELLHEIGHT = int(WINDOWHEIGHT / 20)
 
 WHITE = ( 255, 255, 255)
 BLACK = ( 0, 0, 0)
+DARKGRAY = (120 , 120, 120)
 
-BGCLOLOR = BLACK
+
+BGCOLOR = BLACK
 
 UP = 'up'
 DOWN = 'down'
@@ -27,8 +29,8 @@ def main():
 
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
-    DISPLAYSURF = pygame.display.set_mode((WINDOWNHEIGHT, WINDOWNHEIGHT))
-    BASICFONT = pygame.font.SysFont("MenloforPowerline.ttf", 40)
+    DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+    BASICFONT = pygame.font.SysFont("freesansbold.ttf", 20)
     pygame.display.set_caption("Snake!")
 
     startScreeen()
@@ -49,7 +51,7 @@ def runGame():
         'x': startx - 2,
         'y': starty
     }]
-    direction = DOWN
+    direction = RIGHT
     mouse = randomLocation()
 
     while True:
@@ -143,49 +145,50 @@ def drawMouse(coord):
     mouseRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
     pygame.draw.rect(DISPLAYSURF, WHITE, mouseRect)
     innerMouseRect = pygame.Rect(x + 5, y + 5, CELLSIZE - 10, CELLSIZE - 10)
-    pygame.draw.rect(DISPLAYSURF, DARKGRAY, innerMouseRect)
+    pygame.draw.rect(DISPLAYSURF, BLACK, innerMouseRect)
 
 
 def drawGrid():
-    for x in range(0, WINDOWNWIDTH, CELLSIZE):
-        pygame.draw.line(DISPLAYSURF, DARKGRAY, (x, 0), (x, WINDOWNHEIGHT))
-    for y in range(0, WINDOWNHEIGHT, CELLSIZE):
-        pygame.draw.line(DISPLAYSURF, DARKGRAY, (0, y), (WINDOWNWIDTH, y))
+    for x in range(0, WINDOWWIDTH, CELLSIZE):
+        pygame.draw.line(DISPLAYSURF, DARKGRAY, (x, 0), (x, WINDOWHEIGHT))
+    for y in range(0, WINDOWHEIGHT, CELLSIZE):
+        pygame.draw.line(DISPLAYSURF, DARKGRAY, (0, y), (WINDOWWIDTH, y))
 
 
 def drawScore(score):
     scoreSurf = BASICFONT.render('Score: {0}'.format(score), True, WHITE)
     scoreRect = scoreSurf.get_rect()
-    scoreRect.topleft = (WINDOWNWIDTH - 600, 10)
+    scoreRect.topleft = (WINDOWWIDTH - 120, 10)
     DISPLAYSURF.blit(scoreSurf, scoreRect)
 
 
 def drawPressKeyMsg():
-    pressKeySurf = BASICFONT.render('Press a key to play.', True, DARKGRAY)
+    pressKeyFont = pygame.font.SysFont('freesansbold.tff', 20)
+    pressKeySurf = pressKeyFont.render('Press a key to play.', True, DARKGRAY)
     pressKeyRect = pressKeySurf.get_rect()
-    pressKeyRect.topleft = (WINDOWNWIDTH - 200, WINDOWNHEIGHT - 30)
+    pressKeyRect.topleft = (10, 30)
     DISPLAYSURF.blit(pressKeySurf, pressKeyRect)
-
+    pygame.display.update()
 
 def startScreeen():
     titleFont = pygame.font.SysFont('freesansbold.ttf', 100)
-    titleSurf = titleFont.render('Snake', True, WHITE)    
+    titleSurf = titleFont.render('Snake', True, WHITE)   
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
                 terminate()
             elif event.type == KEYDOWN:
-                return
+                if event.key == K_ESCAPE:
+                    terminate()
+                else:
+                    return
         titleRect = titleSurf.get_rect()
-        titleRect.center = (WINDOWNHEIGHT / 2, WINDOWNWIDTH / 2)
+        titleRect.center = (WINDOWHEIGHT / 2, WINDOWWIDTH / 2)
         DISPLAYSURF.fill(BGCOLOR)
         DISPLAYSURF.blit(titleSurf, titleRect)
+        drawPressKeyMsg()
         pygame.display.update()
         FPSCLOCK.tick(FPS)
-
-
-def showGameOverScreen():
-    drawPressKeyMsg()
 
 
 if __name__ == '__main__':
